@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SE Shield</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap');
+
+  :root {
+    --bg:      #07101C;
+    --card:    #122034;
+    --cardhi:  #19304A;
+    --accent:  #00C9A7;
+    --blue:    #3FA0E0;
+    --white:   #FFFFFF;
+    --muted:   #5E8095;
+    --body:    #A8CCDE;
+    --red:     #E05252;
+    --orange:  #F0943A;
+    --green:   #3DC97A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 360px;
+    min-height: 200px;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid #1A2E42;
+  }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-mark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px; font-weight: 700; color: #07101C;
+  }
+  .logo-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    color: var(--accent); letter-spacing: 1px;
+  }
+  .server-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); transition: background 0.3s;
+  }
+  .server-dot.online  { background: var(--green); }
+  .server-dot.offline { background: var(--red); }
+
+  /* Alert banner */
+  .alert-banner {
+    display: none;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #0A1929;
+    flex-direction: column; gap: 4px;
+  }
+  .alert-banner.visible { display: flex; }
+  .alert-level {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px; font-weight: 700; letter-spacing: 1px;
+  }
+  .alert-level.CRITICAL, .alert-level.HIGH { color: var(--red); }
+  .alert-level.MEDIUM { color: var(--orange); }
+  .alert-level.LOW    { color: var(--green); }
+
+  .alert-banner.CRITICAL { border-color: var(--red); }
+  .alert-banner.HIGH     { border-color: var(--red); }
+  .alert-banner.MEDIUM   { border-color: var(--orange); }
+  .alert-banner.LOW      { border-color: var(--green); }
+
+  .alert-pattern {
+    font-size: 11px; color: var(--body); letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Risk bar */
+  .risk-row {
+    display: none;
+    align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: var(--card);
+  }
+  .risk-row.visible { display: flex; }
+  .risk-label { font-size: 11px; color: var(--muted); width: 65px; flex-shrink: 0; }
+  .risk-bar-track {
+    flex: 1; height: 6px; background: #1A2E42; border-radius: 3px; overflow: hidden;
+  }
+  .risk-bar-fill {
+    height: 100%; border-radius: 3px; width: 0;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.3s;
+    background: var(--accent);
+  }
+  .risk-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700; color: var(--accent); width: 36px; text-align: right;
+  }
+
+  /* Scan button area */
+  .scan-area { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .scan-btn {
+    width: 100%; padding: 10px;
+    background: var(--accent); color: #07101C;
+    border: none; border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: opacity 0.2s;
+  }
+  .scan-btn:hover { opacity: 0.88; }
+  .scan-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .scan-btn.scanning { background: var(--cardhi); color: var(--muted); }
+
+  .reset-btn {
+    width: 100%; padding: 7px;
+    background: transparent; color: var(--muted);
+    border: 1px solid #1A2E42; border-radius: 6px;
+    font-size: 11px; cursor: pointer; transition: color 0.2s;
+  }
+  .reset-btn:hover { color: var(--body); border-color: var(--muted); }
+
+  .details-btn {
+    width: 100%; padding: 7px;
+    background: transparent; color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .details-btn:hover { background: var(--accent); color: var(--bg); }
+
+  /* Last message detail */
+  .msg-detail {
+    display: none;
+    margin: 0 16px 8px;
+    padding: 10px;
+    background: var(--card);
+    border-radius: 6px;
+    border: 1px solid #1A2E42;
+    flex-direction: column; gap: 6px;
+  }
+  .msg-detail.visible { display: flex; }
+  .detail-row { display: flex; justify-content: space-between; align-items: flex-start; }
+  .detail-key { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+  .detail-val { font-size: 11px; color: var(--body); text-align: right; max-width: 200px; word-break: break-word; }
+  .detail-val.label { color: var(--white); font-weight: 600; }
+
+  /* Reasons */
+  .reasons-section {
+    display: none; padding: 0 16px 12px;
+  }
+  .reasons-section.visible { display: block; }
+  .reasons-title {
+    font-size: 10px; color: var(--muted); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .reason-item {
+    padding: 6px 8px; margin-bottom: 4px;
+    background: var(--card); border-radius: 4px;
+    font-size: 10px; color: var(--body); line-height: 1.5;
+    border-left: 2px solid var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .reason-item.attack { border-left-color: var(--red); }
+  .reason-item.benign { border-left-color: var(--green); }
+
+  /* Status / error messages */
+  .status {
+    padding: 8px 16px;
+    font-size: 11px; color: var(--muted); text-align: center;
+  }
+  .status.error { color: var(--red); }
+  .status.loading { color: var(--accent); }
+
+  /* Window counter */
+  .window-info {
+    display: flex; justify-content: space-between;
+    padding: 4px 16px 8px;
+    font-size: 10px; color: var(--muted);
+  }
+
+  .spinner {
+    display: inline-block; width: 10px; height: 10px;
+    border: 2px solid var(--cardhi); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 4px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">SE</div>
+    <div class="logo-name">SE SHIELD</div>
+  </div>
+  <div class="server-dot" id="serverDot" title="Server status"></div>
+</div>
+
+<!-- Alert banner -->
+<div class="alert-banner" id="alertBanner">
+  <div class="alert-level" id="alertLevel">—</div>
+  <div class="alert-pattern" id="alertPattern">—</div>
+</div>
+
+<!-- Risk bar -->
+<div class="risk-row" id="riskRow">
+  <div class="risk-label">ENTITY RISK</div>
+  <div class="risk-bar-track"><div class="risk-bar-fill" id="riskFill"></div></div>
+  <div class="risk-value" id="riskValue">—</div>
+</div>
+
+<!-- Status -->
+<div class="status" id="statusMsg">Checking server…</div>
+
+<!-- Scan area -->
+<div class="scan-area">
+  <button class="scan-btn" id="scanBtn" disabled>SCAN THIS MESSAGE</button>
+  <button class="reset-btn" id="resetBtn" style="display:none">Reset conversation window</button>
+  <button class="details-btn" id="detailsBtn" style="display:none">VIEW FULL BREAKDOWN</button>
+</div>
+
+<!-- Window info -->
+<div class="window-info" id="windowInfo" style="display:none">
+  <span id="windowCount">0 messages in window</span>
+  <span id="convIdDisplay"></span>
+</div>
+
+<!-- Last message detail -->
+<div class="msg-detail" id="msgDetail">
+  <div class="detail-row">
+    <span class="detail-key">LABEL</span>
+    <span class="detail-val label" id="detailLabel">—</span>
+  </div>
+  <div class="detail-row">
+    <span class="detail-key">CONFIDENCE</span>
+    <span class="detail-val" id="detailConf">—</span>
+  </div>
+  <div class="detail-row">
+    <span class="detail-key">REASON</span>
+    <span class="detail-val" id="detailReason">—</span>
+  </div>
+</div>
+
+<!-- Reasoning trail -->
+<div class="reasons-section" id="reasonsSection">
+  <div class="reasons-title">REASONING TRAIL</div>
+  <div id="reasonsList"></div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

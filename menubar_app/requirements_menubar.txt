@@ -1,0 +1,13 @@
+# menubar_app/requirements_menubar.txt
+# Install from project root:
+#   pip install -r menubar_app/requirements_menubar.txt --break-system-packages
+
+rumps>=0.4.0                    # macOS menu bar app framework
+pyperclip>=1.8.0                # clipboard read
+requests>=2.31.0                # HTTP to local server
+
+# macOS system frameworks via PyObjC
+pyobjc-core>=10.0
+pyobjc-framework-Cocoa>=10.0        # NSWorkspace, NSPasteboard, AppKit
+pyobjc-framework-ApplicationServices>=10.0  # Accessibility AX API
+pyobjc-framework-Contacts>=10.0     # CNContactStore — identity resolution

@@ -1,0 +1,70 @@
+# =========================
+# Python / environments
+# =========================
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+venv*/
+*.egg-info/
+
+# =========================
+# IDE / OS
+# =========================
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# =========================
+# Local / generated data
+# =========================
+models/
+data/
+results/
+logs/
+graph.png
+new.txt
+context_engine/
+
+# =========================
+# Large ML model artifacts
+# Layer 3 model files are hosted on Google Drive.
+# =========================
+layer3_slm/model/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pkl
+*.joblib
+
+# =========================
+# Archives / large datasets
+# =========================
+*.zip
+*.tar
+*.tar.gz
+*.gz
+
+# =========================
+# Secrets / local credentials
+# =========================
+.env
+.env.*
+*.key
+*.pem
+credentials.json
+service-account.json
+
+# =========================
+# Local training / dataset-generation artifacts
+# =========================
+generate_phishing_dataset.py
+data_generation/
+layer3_slm/train.py
+layer3_slm/relabel.py
+layer3_slm/fix_checkpoint.py

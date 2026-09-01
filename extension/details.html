@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SE Shield — Full Breakdown</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;600&display=swap');
+
+  :root {
+    --bg:      #07101C;
+    --bg2:     #0C1929;
+    --card:    #122034;
+    --cardhi:  #19304A;
+    --border:  #1A2E42;
+    --accent:  #00C9A7;
+    --blue:    #3FA0E0;
+    --white:   #FFFFFF;
+    --muted:   #5E8095;
+    --body:    #A8CCDE;
+    --red:     #E05252;
+    --orange:  #F0943A;
+    --green:   #3DC97A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: "DM Sans", sans-serif;
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px 12px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark {
+    width: 30px; height: 30px; border-radius: 7px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Space Mono", monospace;
+    font-size: 12px; font-weight: 700; color: #07101C;
+  }
+  .logo-text { font-family: "Space Mono", monospace; font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1.5px; }
+  .header-sub { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; }
+
+  /* ── Layout ── */
+  .content { padding: 16px 20px 32px; display: flex; flex-direction: column; gap: 14px; }
+
+  /* ── Section cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .card-label {
+    font-family: "Space Mono", monospace;
+    font-size: 9px; font-weight: 700; letter-spacing: 2px;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .layer-badge {
+    font-family: "Space Mono", monospace;
+    font-size: 9px; padding: 2px 7px;
+    border-radius: 10px; letter-spacing: 0.5px;
+    background: var(--border); color: var(--body);
+  }
+  .card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+  /* ── Alert hero ── */
+  .alert-hero {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    border-left: 4px solid var(--accent);
+  }
+  .alert-hero.CRITICAL, .alert-hero.HIGH { border-color: var(--red); background: rgba(224,82,82,0.07); }
+  .alert-hero.MEDIUM                     { border-color: var(--orange); background: rgba(240,148,58,0.07); }
+  .alert-hero.LOW                        { border-color: var(--green); background: rgba(61,201,122,0.07); }
+
+  .alert-left { display: flex; flex-direction: column; gap: 3px; }
+  .alert-level-txt {
+    font-family: "Space Mono", monospace;
+    font-size: 24px; font-weight: 700; line-height: 1;
+  }
+  .alert-level-txt.CRITICAL, .alert-level-txt.HIGH { color: var(--red); }
+  .alert-level-txt.MEDIUM { color: var(--orange); }
+  .alert-level-txt.LOW    { color: var(--green); }
+  .alert-pattern { font-size: 11px; color: var(--body); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+
+  /* ── Risk arc ── */
+  .risk-arc-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .risk-arc-val {
+    font-family: "Space Mono", monospace;
+    font-size: 22px; font-weight: 700;
+  }
+  .risk-arc-lbl { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ── Key-value row ── */
+  .kv { display: flex; justify-content: space-between; align-items: center; }
+  .k { font-size: 10px; color: var(--muted); letter-spacing: 0.5px; text-transform: uppercase; }
+  .v { font-size: 12px; color: var(--white); font-weight: 500; text-align: right; }
+  .v.accent { color: var(--accent); font-family: "Space Mono", monospace; }
+  .v.red    { color: var(--red); }
+  .v.orange { color: var(--orange); }
+  .v.green  { color: var(--green); }
+  .v.blue   { color: var(--blue); font-family: "Space Mono", monospace; }
+  .v.muted  { color: var(--muted); }
+
+  /* ── Flag pill ── */
+  .pill {
+    display: inline-block; padding: 2px 9px; border-radius: 10px;
+    font-family: "Space Mono", monospace; font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .pill.true  { background: rgba(224,82,82,0.15);  color: var(--red); }
+  .pill.false { background: rgba(61,201,122,0.12); color: var(--green); }
+
+  /* ── Probability bars ── */
+  .prob-list { display: flex; flex-direction: column; gap: 7px; }
+  .prob-row { display: flex; align-items: center; gap: 8px; }
+  .prob-label {
+    width: 175px; flex-shrink: 0;
+    font-size: 11px; color: var(--body);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .prob-label.top { color: var(--white); font-weight: 600; }
+  .prob-track {
+    flex: 1; height: 7px; background: var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  .prob-fill { height: 100%; border-radius: 4px; background: var(--accent); transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+  .prob-fill.top { background: var(--accent); }
+  .prob-fill.mid { background: var(--blue); }
+  .prob-fill.low { background: var(--muted); }
+  .prob-pct {
+    width: 40px; text-align: right;
+    font-family: "Space Mono", monospace; font-size: 11px; color: var(--muted);
+    flex-shrink: 0;
+  }
+  .prob-pct.top { color: var(--accent); }
+
+  /* ── Risk meter bar ── */
+  .meter-row { display: flex; align-items: center; gap: 10px; }
+  .meter-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .meter-fill  { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .meter-val {
+    width: 44px; text-align: right;
+    font-family: "Space Mono", monospace; font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+  /* ── Reasons trail ── */
+  .reason-item {
+    padding: 8px 10px; border-radius: 5px;
+    background: var(--bg2); border-left: 3px solid var(--muted);
+    font-size: 11px; color: var(--body); line-height: 1.55;
+  }
+  .reason-item.attack { border-left-color: var(--red); }
+  .reason-item.benign { border-left-color: var(--green); }
+
+  /* ── Top label highlight ── */
+  .top-label-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 9px 12px; border-radius: 7px;
+    background: rgba(0,201,167,0.08); border: 1px solid rgba(0,201,167,0.2);
+  }
+  .top-label-name {
+    font-family: "Space Mono", monospace; font-size: 13px; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .top-label-conf {
+    font-family: "Space Mono", monospace; font-size: 14px; font-weight: 700;
+    color: var(--white);
+  }
+
+  /* ── No data ── */
+  .no-data {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .no-data div:first-child { font-size: 2rem; margin-bottom: 10px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">SE</div>
+    <div>
+      <div class="logo-text">SE SHIELD</div>
+      <div class="header-sub">Full Detection Breakdown</div>
+    </div>
+  </div>
+  <div class="header-sub" id="convIdHdr">—</div>
+</div>
+
+<div class="content" id="mainContent">
+  <div class="no-data" id="noData">
+    <div>🔍</div>
+    <div>No scan data yet.</div>
+    <div style="font-size:0.8rem;margin-top:6px">Scan an email first, then open this window.</div>
+  </div>
+</div>
+
+<script src="details.js"></script>
+</body>
+</html>
